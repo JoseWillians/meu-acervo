@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-g">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Meu Acervo</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="header">
+        <div class="container">
+            <a href="index.html" class="logo">Meu Acervo</a>
+            <nav class="user-nav">
+                <span id="userGreeting">Olá, [Seu Nome]</span>
+                <a href="index.html" class="logout-link">Sair</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="dashboard-header">
+                <h1>Meu Acervo de Livros</h1>
+                <div class="dashboard-actions">
+                    <input type="text" class="search-bar" placeholder="Buscar por título...">
+                    <a href="#" id="addBookButton" class="cta-button">+ Adicionar Livro</a>
+                </div>
+            </div>
+
+            <div class="book-list">
+                <div class="book-item">
+                    <span class="book-title">O Hobbit</span>
+                    <span class="book-author">J.R.R. Tolkien</span>
+                    <span class="book-description">Descrição: Um hobbit pacato do Condado é convocado para uma aventura épica...</span>
+                </div>
+                <div class="book-item">
+                    <span class="book-title">O Guia do Mochileiro das Galáxias</span>
+                    <span class="book-author">Douglas Adams</span>
+                    <span class="book-description">Descrição: A Terra está prestes a ser destruída para dar lugar a uma via expressa hiperespacial...</span>
+                </div>
+                 <div class="book-item">
+                    <span class="book-title">Duna</span>
+                    <span class="book-author">Frank Herbert</span>
+                    <span class="book-description">Descrição: Uma saga de ficção científica sobre a luta pelo controle do planeta deserto Arrakis...</span>
+                </div>
+                 <div class="book-item">
+                    <span class="book-title">A Guerra dos Tronos</span>
+                    <span class="book-author">George R. R. Martin</span>
+                    <span class="book-description">Descrição: Em uma terra onde os verões podem durar décadas e os invernos uma vida inteira...</span>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <script>
+        // Espera a página carregar completamente para executar o script
+        window.addEventListener('load', function() {
+            
+            // --- PEGAR NOME DO USUÁRIO DA URL ---
+            const urlParams = new URLSearchParams(window.location.search);
+            const userName = urlParams.get('name');
+
+            if (userName) {
+                const greetingElement = document.getElementById('userGreeting');
+                greetingElement.textContent = `Olá, ${userName}`;
+            }
+
+            // --- BUSCA ---
+            const searchBar = document.querySelector('.search-bar');
+            const bookList = document.querySelector('.book-list');
+
+            searchBar.addEventListener('input', function() {
+                const searchTerm = searchBar.value.toLowerCase();
+                const bookItems = bookList.querySelectorAll('.book-item'); // Pega todos os livros, inclusive os novos
+
+                bookItems.forEach(function(item) {
+                    const title = item.querySelector('.book-title').textContent.toLowerCase();
+                    
+                    if (title.includes(searchTerm)) {
+                        item.style.display = 'grid'; // Mostra o item se o título corresponder
+                    } else {
+                        item.style.display = 'none'; // Esconde o item se não corresponder
+                    }
+                });
+            });
+
+            // --- ADICIONAR LIVRO ---
+            const addBookButton = document.getElementById('addBookButton');
+
+            addBookButton.addEventListener('click', function(event) {
+                event.preventDefault(); // Impede o link de recarregar a página
+
+                // Pede as informações ao usuário através de caixas de diálogo
+                const title = prompt("Digite o título do novo livro:");
+                if (!title) return; // Se o usuário cancelar ou deixar em branco, a função para
+
+                const author = prompt("Digite o autor do livro:");
+                if (!author) return;
+
+                const description = prompt("Digite a descrição do livro:");
+                if (!description) return;
+
+                // Cria um novo elemento div para o livro
+                const newBookItem = document.createElement('div');
+                newBookItem.classList.add('book-item');
+
+                // Adiciona o HTML interno com as informações fornecidas
+                newBookItem.innerHTML = `
+                    <span class="book-title">${title}</span>
+                    <span class="book-author">${author}</span>
+                    <span class="book-description">${description}</span>
+                `;
+
+                // Adiciona o novo livro no início da lista
+                bookList.prepend(newBookItem);
+            });
+        });
+    </script>
+
+</body>
+</html>
